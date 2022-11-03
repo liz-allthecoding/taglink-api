@@ -1,0 +1,14 @@
+# database config
+database:
+  username: apiservice_user
+  password: 'PASSWORD'
+  host: 127.0.0.1
+  name: apiservice
+  port: 3306
+authentication:
+  # to get a string like this run:
+  # openssl rand -hex 32
+  secret_key: SECRET_KEY
+origins:
+  - "https://localhost"
+  - "https://somehost.com"

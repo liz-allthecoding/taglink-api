@@ -1,0 +1,20 @@
+base_urls:
+  local: 'https://<YOUR_IP>/api/'
+
+ca_certs:
+  local: '/etc/ssl/certs/rootCA.crt'
+
+username:
+  local: 'integration_test_user'
+
+password:
+  local: 'INTEGRATION_TEST_PASSWORD'
+
+account_email_1:
+  local: 'account@test.com'
+
+account_email_2:
+  local: 'account2@test.com'
+
+account_password:
+  local: 'INTEGRATION_TEST_ACCOUNT_PASSWORD'
