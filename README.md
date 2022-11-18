@@ -102,5 +102,6 @@ Run the integration tests with:
 
 | Version | Change(s)
 |---------| ---------
+| 0.0.2   | Add start.sh and systemd service configuration file
 | 0.0.1   | Initial commit
      
