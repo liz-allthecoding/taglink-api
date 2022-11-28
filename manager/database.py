@@ -13,7 +13,7 @@ port = database_config['port']
 
 SQLALCHEMY_DATABASE_URL = f"mariadb+mariadbconnector://{username}:{password}@{host}:{port}/{name}"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_pre_ping=True, pool_recyle=3600)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
