@@ -102,6 +102,7 @@ Run the integration tests with:
 
 | Version | Change(s)
 |---------| ---------
+| 0.0.4   | Added integration tests for when tag names have spaces
 | 0.0.3   | Added pool_pre_ping=True, pool_recyle=3600 params to create_engine, to prevent database connections dropping
 | 0.0.2   | Add start.sh and systemd service configuration file
 | 0.0.1   | Initial commit
