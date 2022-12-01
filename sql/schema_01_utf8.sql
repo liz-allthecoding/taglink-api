@@ -1,3 +1,4 @@
+SET collation_connection = 'utf8_general_ci';
 USE apiservice;
 ALTER TABLE taglink DROP FOREIGN KEY taglink_ibfk_1; -- tag_id
 ALTER TABLE taglink DROP FOREIGN KEY taglink_ibfk_2; -- link_id
