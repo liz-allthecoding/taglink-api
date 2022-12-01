@@ -68,7 +68,14 @@ class TagTests(IntegrationTestsBase):
         tag = self.create_tag(tag='test1 tag with spaces', token=account_token)
         self.store_tag(tag, self.account_emails[1])
 
-    def test_409_create_tag_account_duplicate(self):
+    def test_409_create_tag_account_with_special_chars(self):
+        LOG.info("====TEST create_tag_account_with_special_chars===")
+        account_id = self.accounts[self.account_emails[1]]['account_id']
+        account_token = self.get_account_token(account_id=account_id)
+        tag = self.create_tag(tag='両丢', token=account_token)
+        self.store_tag(tag, self.account_emails[1])
+
+    def test_410_create_tag_account_duplicate(self):
         LOG.info("====TEST create_tag_account_duplicate===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
@@ -82,7 +89,7 @@ class TagTests(IntegrationTestsBase):
         resp_json = resp.json()
         self.assertEqual(resp_json['detail'], f'Tag with name test2 exists for account {account_id}')
 
-    def test_410_create_tag_account_wrong_account_id(self):
+    def test_411_create_tag_account_wrong_account_id(self):
         LOG.info("====TEST create_tag_account_wrong_account_id===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_id2 = self.accounts[self.account_emails[0]]['account_id']
@@ -98,7 +105,7 @@ class TagTests(IntegrationTestsBase):
         resp_json = resp.json()
         self.assertEqual(resp_json['detail'], 'The account_id field should not be provided for account scope')
 
-    def test_411_get_tag_not_authenticated(self):
+    def test_412_get_tag_not_authenticated(self):
         LOG.info("====TEST get_tag_not_authenticated===")
         tag_id = self.tags[self.account_emails[0]][0]['tag_id']
         self.set_api_headers(content_type=ContentType.JSON, token=None)
@@ -107,12 +114,12 @@ class TagTests(IntegrationTestsBase):
         resp_json = resp.json()
         self.assertEqual(resp_json['detail'], 'Not authenticated')
 
-    def test_412_get_tag_admin(self):
+    def test_413_get_tag_admin(self):
         LOG.info("====TEST get_tag_admin===")
         tag_id = self.tags[self.account_emails[0]][0]['tag_id']
         self.get_tag(tag_id=tag_id, token=self.admin_token)
 
-    def test_413_get_tag_account(self):
+    def test_414_get_tag_account(self):
         LOG.info("====TEST get_tag_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
@@ -127,37 +134,37 @@ class TagTests(IntegrationTestsBase):
         resp_json = resp.json()
         self.assertEqual(resp_json['detail'], f'Tag with tag_id {tag_id} not found')
 
-    def test_414_get_tags_admin(self):
+    def test_415_get_tags_admin(self):
         LOG.info("====TEST get_tags_admin===")
         tags = self.get_tags(token=self.admin_token)
-        self.assertTrue(len(tags) >= 4)
+        self.assertTrue(len(tags) >= 5)
 
-    def test_415_get_tags_account(self):
+    def test_416_get_tags_account(self):
         LOG.info("====TEST get_tags_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
         tags = self.get_tags(token=account_token)
-        self.assertEqual(len(tags), 4)
+        self.assertEqual(len(tags), 5)
 
-    def test_416_get_tags_by_account_id_admin(self):
+    def test_417_get_tags_by_account_id_admin(self):
         LOG.info("====TEST get_tags_by_account_id_admin===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         tags = self.get_tags(token=self.admin_token, account_id=account_id)
-        self.assertTrue(len(tags) >= 3)
+        self.assertTrue(len(tags) >= 5)
 
-    def test_417_get_tags_by_account_id_account(self):
+    def test_418_get_tags_by_account_id_account(self):
         LOG.info("====TEST get_tags_by_account_id_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
         tags = self.get_tags(token=account_token, account_id=account_id)
-        self.assertEqual(len(tags), 4)
+        self.assertEqual(len(tags), 5)
 
-    def test_418_get_tags_by_tag_admin(self):
+    def test_419_get_tags_by_tag_admin(self):
         LOG.info("====TEST get_tags_by_tag_admin===")
         tags = self.get_tags(token=self.admin_token, tag='test1')
         self.assertTrue(len(tags) >= 2)
 
-    def test_419_get_tags_by_tag_account(self):
+    def test_420_get_tags_by_tag_account(self):
         LOG.info("====TEST get_tags_by_tag_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
@@ -167,7 +174,10 @@ class TagTests(IntegrationTestsBase):
         tags = self.get_tags(token=account_token, tag='test1 tag with spaces')
         self.assertEqual(len(tags), 1)
 
-    def test_420_delete_tag_account(self):
+        tags = self.get_tags(token=account_token, tag='両丢')
+        self.assertEqual(len(tags), 1)
+
+    def test_421_delete_tag_account(self):
         LOG.info("====TEST delete_tag_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
@@ -182,12 +192,12 @@ class TagTests(IntegrationTestsBase):
         resp_json = resp.json()
         self.assertEqual(resp_json['detail'], f'Tag with tag_id {tag_id} not found')
 
-    def test_421_delete_tag_admin(self):
+    def test_422_delete_tag_admin(self):
         LOG.info("====TEST delete_tag_admin===")
         tag_id = self.tags[self.account_emails[0]][0]['tag_id']
         self.delete_tag(tag_id=tag_id, token=self.admin_token)
 
-    def test_422_delete_account_deletes_tags(self):
+    def test_423_delete_account_deletes_tags(self):
         LOG.info("====TEST delete_account_deletes_tags===")
         account_id_1 = self.accounts[self.account_emails[0]]['account_id']
         self.delete_account(account_id=account_id_1, token=self.admin_token)

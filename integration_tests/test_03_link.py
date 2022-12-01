@@ -91,7 +91,15 @@ class LinkTests(IntegrationTestsBase):
                                 account_id=account_id)
         self.store_link(link, self.account_emails[1])
 
-    def test_311_create_link_account_invalid_tag(self):
+    def test_311_create_link_account_with_tag_with_special_chars(self):
+        LOG.info("====TEST create_link_account_with_tag_with_special_chars===")
+        account_id = self.accounts[self.account_emails[1]]['account_id']
+        account_token = self.get_account_token(account_id=account_id)
+        link = self.create_link(link='https://test7.com', token=account_token, tag='両丢',
+                                account_id=account_id)
+        self.store_link(link, self.account_emails[1])
+
+    def test_312_create_link_account_invalid_tag(self):
         LOG.info("====TEST create_link_invalid_tag===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
@@ -106,7 +114,7 @@ class LinkTests(IntegrationTestsBase):
         resp_json = resp.json()
         self.assertEqual(resp_json['detail'], f'Tag with tag_id invalid not found for account_id {account_id}')
 
-    def test_312_create_link_account_wrong_account_id(self):
+    def test_313_create_link_account_wrong_account_id(self):
         LOG.info("====TEST create_link_account_wrong_account_id===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_id2 = self.accounts[self.account_emails[0]]['account_id']
@@ -123,12 +131,12 @@ class LinkTests(IntegrationTestsBase):
         resp_json = resp.json()
         self.assertEqual(resp_json['detail'], 'The account_id field should not be provided for account scope')
 
-    def test_313_get_link_admin(self):
+    def test_314_get_link_admin(self):
         LOG.info("====TEST get_link_admin===")
         link_id = self.links[self.account_emails[0]][0]['link_id']
         self.get_link(link_id=link_id, token=self.admin_token)
 
-    def test_314_get_link_account(self):
+    def test_315_get_link_account(self):
         LOG.info("====TEST get_link_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
@@ -142,37 +150,37 @@ class LinkTests(IntegrationTestsBase):
         resp_json = resp.json()
         self.assertEqual(resp_json['detail'], f'Link with link_id {link_id} not found')
 
-    def test_315_get_links_admin(self):
+    def test_316_get_links_admin(self):
         LOG.info("====TEST get_links_admin===")
         links = self.get_links(token=self.admin_token)
-        self.assertTrue(len(links) >= 7)
+        self.assertTrue(len(links) >= 8)
 
-    def test_316_get_links_account(self):
+    def test_317_get_links_account(self):
         LOG.info("====TEST get_links_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
         links = self.get_links(token=account_token)
-        self.assertEqual(len(links), 6)
+        self.assertEqual(len(links), 7)
 
-    def test_317_get_links_by_account_id_admin(self):
+    def test_318_get_links_by_account_id_admin(self):
         LOG.info("====TEST get_links_by_account_id_admin===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         links = self.get_links(token=self.admin_token, account_id=account_id)
-        self.assertTrue(len(links) >= 6)
+        self.assertTrue(len(links) >= 7)
 
-    def test_318_get_links_by_account_id_account(self):
+    def test_319_get_links_by_account_id_account(self):
         LOG.info("====TEST get_links_by_account_id_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
         links = self.get_links(token=account_token, account_id=account_id)
-        self.assertEqual(len(links), 6)
+        self.assertEqual(len(links), 7)
 
-    def test_319_get_links_by_tag_admin(self):
+    def test_320_get_links_by_tag_admin(self):
         LOG.info("====TEST get_links_by_tag_admin===")
         links = self.get_links(token=self.admin_token, tag='test1')
         self.assertTrue(len(links) >= 2)
 
-    def test_320_get_links_by_tag_account(self):
+    def test_321_get_links_by_tag_account(self):
         LOG.info("====TEST get_links_by_tag_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
@@ -182,7 +190,10 @@ class LinkTests(IntegrationTestsBase):
         links = self.get_links(token=account_token, tag='test2 tag with spaces')
         self.assertTrue(len(links) >= 1)
 
-    def test_321_get_links_by_tag_id_admin(self):
+        links = self.get_links(token=account_token, tag='両丢')
+        self.assertTrue(len(links) >= 1)
+
+    def test_322_get_links_by_tag_id_admin(self):
         LOG.info("====TEST get_links_by_tag_id_admin===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         tags = self.get_tags(token=self.admin_token, tag='test1', account_id=account_id)
@@ -190,7 +201,7 @@ class LinkTests(IntegrationTestsBase):
         links = self.get_links(token=self.admin_token, tag_id=tag_id)
         self.assertTrue(len(links) >= 1)
 
-    def test_322_get_links_by_tag_id_account(self):
+    def test_323_get_links_by_tag_id_account(self):
         LOG.info("====TEST get_links_by_tag_id_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
@@ -199,7 +210,7 @@ class LinkTests(IntegrationTestsBase):
         links = self.get_links(token=account_token, tag_id=tag_id)
         self.assertTrue(len(links) >= 1)
 
-    def test_323_delete_link_account(self):
+    def test_324_delete_link_account(self):
         LOG.info("====TEST delete_link_account===")
         account_id = self.accounts[self.account_emails[1]]['account_id']
         account_token = self.get_account_token(account_id=account_id)
@@ -214,12 +225,12 @@ class LinkTests(IntegrationTestsBase):
         resp_json = resp.json()
         self.assertEqual(resp_json['detail'], f'Link with link_id {link_id} not found')
 
-    def test_324_delete_link_admin(self):
+    def test_325_delete_link_admin(self):
         LOG.info("====TEST delete_link_admin===")
         link_id = self.links[self.account_emails[0]][0]['link_id']
         self.delete_link(link_id=link_id, token=self.admin_token)
 
-    def test_325_delete_account_deletes_links(self):
+    def test_326_delete_account_deletes_links(self):
         LOG.info("====TEST delete_account_deletes_links===")
         account_id_1 = self.accounts[self.account_emails[0]]['account_id']
         self.delete_account(account_id=account_id_1, token=self.admin_token)
